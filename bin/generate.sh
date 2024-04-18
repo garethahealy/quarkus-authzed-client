@@ -14,9 +14,12 @@ pushd $BASE_DIR
 echo "Updating proto files using $PROTO_SHA"
 rm -rf $PROTO_DIR
 mkdir -p $PROTO_DIR
+
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/envoyproxy/protoc-gen-validate -o $PROTO_DIR
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/grpc-ecosystem/grpc-gateway -o $PROTO_DIR
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/authzed/api:${PROTO_SHA} -o $PROTO_DIR
+
+ls -lrt $(pwd):/workspace
 
 echo "Generating gRPC client"
 mvn clean package -Pgenerate -pl :quarkus-authzed-grpc-generator
