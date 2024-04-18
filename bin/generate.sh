@@ -3,6 +3,7 @@ set -e
 
 BASE_DIR=`git rev-parse --show-toplevel`
 PROTO_DIR="${BASE_DIR}/grpc/generator/src/main/proto"
+PROTO_DIR_IN_DOCKER="/workspace/grpc/generator/src/main/proto"
 GENERATED_DIR="${BASE_DIR}/grpc/generator/target/generated-sources/grpc"
 TARGET_DIR="${BASE_DIR}/grpc/client/src/main/java"
 
@@ -15,9 +16,12 @@ echo "Updating proto files using $PROTO_SHA"
 rm -rf $PROTO_DIR
 mkdir -p $PROTO_DIR
 
-docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/envoyproxy/protoc-gen-validate -o "/workspace/grpc/generator/src/main/proto"
-docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/grpc-ecosystem/grpc-gateway -o "/workspace/grpc/generator/src/main/proto"
-docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/authzed/api:${PROTO_SHA} -o "/workspace/grpc/generator/src/main/proto"
+docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/envoyproxy/protoc-gen-validate -o $PROTO_DIR_IN_DOCKER
+docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/grpc-ecosystem/grpc-gateway -o $PROTO_DIR_IN_DOCKER
+docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/authzed/api:${PROTO_SHA} -o $PROTO_DIR_IN_DOCKER
+
+# Need to put _ between watch and resources due to MacOS case sensitive, else maven will fail
+mv $PROTO_DIR/authzed/api/v1alpha1/watchresources_service.proto $PROTO_DIR/authzed/api/v1alpha1/watch_resources_service.proto
 
 echo "Generating gRPC client"
 mvn clean package -Pgenerate -pl :quarkus-authzed-grpc-generator
