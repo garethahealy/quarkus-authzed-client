@@ -23,11 +23,11 @@ on:
       - '.all-contributorsrc'
 
 jobs:
-  build:
-    name: Build on ${{ matrix.os }}
+  generate:
+    name: generate on ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
