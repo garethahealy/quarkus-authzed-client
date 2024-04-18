@@ -19,7 +19,8 @@ docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/grpc-ecosystem/grpc-gateway -o $PROTO_DIR
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/authzed/api:${PROTO_SHA} -o $PROTO_DIR
 
-ls -lrt $(pwd):/workspace
+ls -lrt
+find . -name permission_service.proto
 
 echo "Generating gRPC client"
 mvn clean package -Pgenerate -pl :quarkus-authzed-grpc-generator
