@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
 BASE_DIR=`git rev-parse --show-toplevel`
 PROTO_DIR="${BASE_DIR}/grpc/generator/src/main/proto"
 GENERATED_DIR="${BASE_DIR}/grpc/generator/target/generated-sources/grpc"
 TARGET_DIR="${BASE_DIR}/grpc/client/src/main/java"
 
-PROTO_SHA=${1:-6bf58783fdc3ed33da39a728e2538c1cb58da34e}
+# https://buf.build/authzed/api/activity/commit/v1.30.0
+PROTO_SHA=${1:-63d28145265446828dc8270d04472ea8}
 
 pushd $BASE_DIR
 
