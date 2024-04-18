@@ -12,6 +12,8 @@ PROTO_SHA=${1:-63d28145265446828dc8270d04472ea8}
 pushd $BASE_DIR
 
 echo "Updating proto files using $PROTO_SHA"
+rm -rf $PROTO_DIR
+mkdir -p $PROTO_DIR
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/envoyproxy/protoc-gen-validate -o $PROTO_DIR
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/grpc-ecosystem/grpc-gateway -o $PROTO_DIR
 docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf export buf.build/authzed/api:${PROTO_SHA} -o $PROTO_DIR
